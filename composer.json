@@ -1,0 +1,42 @@
+{
+    "name": "uberboom/oauth2-basecamp",
+    "description": "Basecamp Provider for the OAuth 2.0 Client",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bernd Ennsfellner",
+            "email": "bernd@ennsfellner.at",
+            "homepage": "http://uberboom.com/"
+        }
+    ],
+    "keywords": [
+        "oauth",
+        "oauth2",
+        "client",
+        "authorization",
+        "authentication",
+        "basecamp"
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "league/oauth2-client": "0.12.*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.0",
+        "mockery/mockery": "~0.9",
+        "squizlabs/php_codesniffer": "~2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Uberboom\\OAuth2\\Client\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Uberboom\\OAuth2\\Client\\Test\\": "tests/src/"
+        }
+    },
+    "branch-alias": {
+        "dev-master": "0.0.x-dev"
+    }
+}
