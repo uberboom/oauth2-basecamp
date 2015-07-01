@@ -10,7 +10,7 @@ This package provides Basecamp OAuth 2.0 support for the PHP League’s [OAuth 2
 To install, use composer:
 
 ```
-composer require uberboom/oauth2-eventbrite
+composer require uberboom/oauth2-basecamp
 ```
 
 ## Usage
