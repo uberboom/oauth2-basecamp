@@ -27,14 +27,10 @@ class Basecamp extends AbstractProvider
     {
         $user = new User();
         $user->exchangeArray([
-            'uid' => isset($response->identity->id) && $response->identity->id
-                ? $response->identity->id : null,
-            'email' => isset($response->identity->email_address) && $response->identity->email_address
-                ? $response->identity->email_address : null,
-            'firstname' => isset($response->identity->first_name) && $response->identity->first_name
-                ? $response->identity->first_name : null,
-            'lastname' => isset($response->identity->last_name) && $response->identity->last_name
-                ? $response->identity->last_name : null,
+            'uid' => isset($response->identity->id) && $response->identity->id ? $response->identity->id : null,
+            'email' => isset($response->identity->email_address) && $response->identity->email_address ? $response->identity->email_address : null,
+            'firstname' => isset($response->identity->first_name) && $response->identity->first_name ? $response->identity->first_name : null,
+            'lastname' => isset($response->identity->last_name) && $response->identity->last_name ? $response->identity->last_name : null,
         ]);
         return $user;
     }
@@ -46,8 +42,7 @@ class Basecamp extends AbstractProvider
 
     public function userEmail($response, AccessToken $token)
     {
-        return isset($response->identity->email_address) && $response->identity->email_address
-            ? $response->identity->email_address : null;
+        return isset($response->identity->email_address) && $response->identity->email_address ? $response->identity->email_address : null;
     }
 
     public function userScreenName($response, AccessToken $token)
@@ -67,4 +62,17 @@ class Basecamp extends AbstractProvider
         $params['type'] = 'web_server';
         return parent::getAccessToken($grant, $params);
     }
+
+    /**
+     * Get basecamp accounts
+     *
+     * @return array
+     */
+    public function getBasecampAccounts(AccessToken $token)
+    {
+        $response = $this->fetchUserDetails($token);
+        $details = json_decode($response);
+        return $details->accounts;
+    }
+
 }

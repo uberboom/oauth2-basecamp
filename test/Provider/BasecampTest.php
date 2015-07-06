@@ -61,7 +61,7 @@ class BasecampTest extends \PHPUnit_Framework_TestCase
         $postResponse = m::mock('Guzzle\Http\Message\Response');
         $postResponse->shouldReceive('getBody')->times(1)->andReturn('{"access_token": "mock_access_token", "expires": 3600, "refresh_token": "mock_refresh_token", "uid": 1}');
         $getResponse = m::mock('Guzzle\Http\Message\Response');
-        $getResponse->shouldReceive('getBody')->times(4)->andReturn('{"identity": {"first_name": "mock_first_name", "id": 12345, "email_address": "mock_email_address", "last_name": "mock_last_name"}}');
+        $getResponse->shouldReceive('getBody')->times(4)->andReturn('{"identity": {"first_name": "mock_first_name", "id": 12345, "email_address": "mock_email_address", "last_name": "mock_last_name"}, "accounts": [ {"id": 45678, "name": "mock_name", "href": "mock_href", "product": "mock_product"} ]}');
         $client = m::mock('Guzzle\Service\Client');
         $client->shouldReceive('setBaseUrl')->times(5);
         $client->shouldReceive('post->send')->times(1)->andReturn($postResponse);
@@ -74,5 +74,25 @@ class BasecampTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('mock_email_address', $this->provider->getUserEmail($token));
         $this->assertEquals(['mock_first_name', 'mock_last_name'], $this->provider->getUserScreenName($token));
         $this->assertEquals('mock_email_address', $user->email);
+    }
+    public function testBasecampAccounts()
+    {
+        $postResponse = m::mock('Guzzle\Http\Message\Response');
+        $postResponse->shouldReceive('getBody')->times(1)->andReturn('{"access_token": "mock_access_token", "expires": 3600, "refresh_token": "mock_refresh_token", "uid": 1}');
+        $getResponse = m::mock('Guzzle\Http\Message\Response');
+        $getResponse->shouldReceive('getBody')->times(1)->andReturn('{"identity": {"first_name": "mock_first_name", "id": 12345, "email_address": "mock_email_address", "last_name": "mock_last_name"}, "accounts": [ {"id": 45678, "name": "mock_name", "href": "mock_href", "product": "mock_product"} ]}');
+        $client = m::mock('Guzzle\Service\Client');
+        $client->shouldReceive('setBaseUrl')->times(2);
+        $client->shouldReceive('post->send')->times(1)->andReturn($postResponse);
+        $client->shouldReceive('get->send')->times(1)->andReturn($getResponse);
+        $client->shouldReceive('setDefaultOption')->times(1);
+        $this->provider->setHttpClient($client);
+        $token = $this->provider->getAccessToken('authorization_code', ['code' => 'mock_authorization_code']);
+        $expectedUser = new \stdClass();
+        $expectedUser->id = 45678;
+        $expectedUser->name = 'mock_name';
+        $expectedUser->href = 'mock_href';
+        $expectedUser->product = 'mock_product';
+        $this->assertEquals([$expectedUser], $this->provider->getBasecampAccounts($token));
     }
 }
